@@ -1,162 +1,192 @@
 <?php
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+	use \Psr\Http\Message\ServerRequestInterface as Request;
+	use \Psr\Http\Message\ResponseInterface as Response;
+	
 
-$app = new \Slim\App;
+	$app = new \Slim\App;
+	
 
-$app->options('/{routes:.+}', function ($request, $response, $args) {
-    return $response;
-});
+	$app->options('/{routes:.+}', function ($request, $response, $args) {
+	    return $response;
+	});
+	
 
-$app->add(function ($req, $res, $next) {
-    $response = $next($req, $res);
-    return $response
-            ->withHeader('Access-Control-Allow-Origin', '*')
-            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-});
+	$app->add(function ($req, $res, $next) {
+	    $response = $next($req, $res);
+	    return $response
+	            ->withHeader('Access-Control-Allow-Origin', '*')
+	            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+	            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+	});
+	
 
-// Get All Customers
-$app->get('/api/customers', function(Request $request, Response $response){
-    $sql = "SELECT * FROM customers";
+	// Get All estudiantes
+	$app->get('/api/ estudiantes, function(Request $request, Response $response){
+	    $sql = "SELECT * FROM estudiantes ";
+	
 
-    try{
-        // Get DB Object
-        $db = new db();
-        // Connect
-        $db = $db->connect();
+	    try{
+	        // Get DB Object
+	        $db = new db();
+	        // Connect
+	        $db = $db->connect();
+	
 
-        $stmt = $db->query($sql);
-        $customers = $stmt->fetchAll(PDO::FETCH_OBJ);
-        $db = null;
-        echo json_encode($customers);
-    } catch(PDOException $e){
-        echo '{"error": {"text": '.$e->getMessage().'}';
-    }
-});
+	        $stmt = $db->query($sql);
+	        $ estudiantes = $stmt->fetchAll(PDO::FETCH_OBJ);
+	        $db = null;
+	        echo json_encode($estudiantes);
+	    } catch(PDOException $e){
+	        echo '{"error": {"text": '.$e->getMessage().'}';
+	    }
+	});
+	
 
-// Get Single Customer
-$app->get('/api/customer/{id}', function(Request $request, Response $response){
-    $id = $request->getAttribute('id');
+	// Get Single estudiantes
+	$app->get('/api/ estudiantes /{ codigo }', function(Request $request, Response $response){
+	    $ codigo = $request->getAttribute(' codigo ');
+	
 
-    $sql = "SELECT * FROM customers WHERE id = $id";
+	    $sql = "SELECT * FROM estudiantes WHERE codigo = $ codigo";
+	
 
-    try{
-        // Get DB Object
-        $db = new db();
-        // Connect
-        $db = $db->connect();
+	    try{
+	        // Get DB Object
+	        $db = new db();
+	        // Connect
+	        $db = $db->connect();
+	
 
-        $stmt = $db->query($sql);
-        $customer = $stmt->fetch(PDO::FETCH_OBJ);
-        $db = null;
-        echo json_encode($customer);
-    } catch(PDOException $e){
-        echo '{"error": {"text": '.$e->getMessage().'}';
-    }
-});
+	        $stmt = $db->query($sql);
+	        $ estudiantes = $stmt->fetch(PDO::FETCH_OBJ);
+	        $db = null;
+	        echo json_encode($estudiantes);
+	    } catch(PDOException $e){
+	        echo '{"error": {"text": '.$e->getMessage().'}';
+	    }
+	});
+	
 
-// Add Customer
-$app->post('/api/customer/add', function(Request $request, Response $response){
-    $first_name = $request->getParam('first_name');
-    $last_name = $request->getParam('last_name');
-    $phone = $request->getParam('phone');
-    $email = $request->getParam('email');
-    $address = $request->getParam('address');
-    $city = $request->getParam('city');
-    $state = $request->getParam('state');
+	// Add estudiantes
+	$app->post('/api/ estudiantes /add', function(Request $request, Response $response){
+	    $nombre = $request->getParam('nombre');
+	    $apellido = $request->getParam('apellido');
+	    $telefono = $request->getParam('telefono');
+	    $correo = $request->getParam('correo');
+	    $direccion = $request->getParam('direccion');
+	    $ciudad = $request->getParam('ciudad');
+	    $carrera = $request->getParam('carrera');
+	
 
-    $sql = "INSERT INTO customers (first_name,last_name,phone,email,address,city,state) VALUES
-    (:first_name,:last_name,:phone,:email,:address,:city,:state)";
+	    $sql = "INSERT INTO estudiantes (nombre,apellido,telefono,correo,direccion,ciudad,carrera) VALUES
+	    (:nombre,:apellido,:telefono,:correo,:direccion,:ciudad,:carrera)";
+	
 
-    try{
-        // Get DB Object
-        $db = new db();
-        // Connect
-        $db = $db->connect();
+	    try{
+	        // Get DB Object
+	        $db = new db();
+	        // Connect
+	        $db = $db->connect();
+	
 
-        $stmt = $db->prepare($sql);
+	        $stmt = $db->prepare($sql);
+	
 
-        $stmt->bindParam(':first_name', $first_name);
-        $stmt->bindParam(':last_name',  $last_name);
-        $stmt->bindParam(':phone',      $phone);
-        $stmt->bindParam(':email',      $email);
-        $stmt->bindParam(':address',    $address);
-        $stmt->bindParam(':city',       $city);
-        $stmt->bindParam(':state',      $state);
+	        $stmt->bindParam(':nombre ', $nombre);
+	        $stmt->bindParam(':apellido ',  $apellido);
+	        $stmt->bindParam(':telefono',   $telefono);
+	        $stmt->bindParam(':correo',     $correo);
+	        $stmt->bindParam(':direccion',  $direccion);
+	        $stmt->bindParam(':ciudad',     $ciudad);
+	        $stmt->bindParam(':carrera',    $carrera);
+	
 
-        $stmt->execute();
+	        $stmt->execute();
+	
 
-        echo '{"notice": {"text": "Customer Added"}';
+	        echo '{"notice": {"text": " estudiantes Added"}';
+	
 
-    } catch(PDOException $e){
-        echo '{"error": {"text": '.$e->getMessage().'}';
-    }
-});
+	    } catch(PDOException $e){
+	        echo '{"error": {"text": '.$e->getMessage().'}';
+	    }
+	});
+	
 
-// Update Customer
-$app->put('/api/customer/update/{id}', function(Request $request, Response $response){
-    $id = $request->getAttribute('id');
-    $first_name = $request->getParam('first_name');
-    $last_name = $request->getParam('last_name');
-    $phone = $request->getParam('phone');
-    $email = $request->getParam('email');
-    $address = $request->getParam('address');
-    $city = $request->getParam('city');
-    $state = $request->getParam('state');
+	// Update estudiantes
+	$app->put('/api/ estudiantes /update/{ codigo }', function(Request $request, Response $response){
+	    $ codigo = $request->getAttribute('codigo');
+	    $ nombre = $request->getParam('nombre');
+	    $ apellido = $request->getParam('apellido');
+	    $ telefono = $request->getParam('telefono');
+	    $correo = $request->getParam('correo');
+	    $direccion = $request->getParam('direccion');
+	    $ciudad = $request->getParam('ciudad');
+	    $carrera = $request->getParam('carrera');
+	
 
-    $sql = "UPDATE customers SET
-				first_name 	= :first_name,
-				last_name 	= :last_name,
-                phone		= :phone,
-                email		= :email,
-                address 	= :address,
-                city 		= :city,
-                state		= :state
-			WHERE id = $id";
+	    $sql = "UPDATE estudiantes SET
+			  nombre 	= :nombre,
+			  apellido 	= :apellido,
+	                telefono	= :telefono,
+	                correo	= :correo,
+	                direccion 	= :direccion,
+	                ciudad 	= :ciudad,
+	                carrera	= :carrera
+				WHERE codigo = $ codigo ";
+	
 
-    try{
-        // Get DB Object
-        $db = new db();
-        // Connect
-        $db = $db->connect();
+	    try{
+	        // Get DB Object
+	        $db = new db();
+	        // Connect
+	        $db = $db->connect();
+	
 
-        $stmt = $db->prepare($sql);
+	        $stmt = $db->prepare($sql);
+	
 
-        $stmt->bindParam(':first_name', $first_name);
-        $stmt->bindParam(':last_name',  $last_name);
-        $stmt->bindParam(':phone',      $phone);
-        $stmt->bindParam(':email',      $email);
-        $stmt->bindParam(':address',    $address);
-        $stmt->bindParam(':city',       $city);
-        $stmt->bindParam(':state',      $state);
+	        $stmt->bindParam(':nombre', $nombre);
+	        $stmt->bindParam(':apellido',  $apellido);
+	        $stmt->bindParam(':telefono',  $telefono);
+	        $stmt->bindParam(':correo',    $correo);
+	        $stmt->bindParam(':direccion', $direccion);
+	        $stmt->bindParam(':ciudad',    $ciudad);
+	        $stmt->bindParam(':carrera',   $carrera);
+	
 
-        $stmt->execute();
+	        $stmt->execute();
+	
 
-        echo '{"notice": {"text": "Customer Updated"}';
+	        echo '{"notice": {"text": " estudiantes Updated"}';
+	
 
-    } catch(PDOException $e){
-        echo '{"error": {"text": '.$e->getMessage().'}';
-    }
-});
+	    } catch(PDOException $e){
+	        echo '{"error": {"text": '.$e->getMessage().'}';
+	    }
+	});
+	
 
-// Delete Customer
-$app->delete('/api/customer/delete/{id}', function(Request $request, Response $response){
-    $id = $request->getAttribute('id');
+	// Delete estudiantes
+	$app->delete('/api/ estudiantes /delete/{ codigo }', function(Request $request, Response $response){
+	    $ codigo = $request->getAttribute(' codigo ');
+	
 
-    $sql = "DELETE FROM customers WHERE id = $id";
+	    $sql = "DELETE FROM estudiantes WHERE codigo = $ codigo ";
+	
 
-    try{
-        // Get DB Object
-        $db = new db();
-        // Connect
-        $db = $db->connect();
+	    try{
+	        // Get DB Object
+	        $db = new db();
+	        // Connect
+	        $db = $db->connect();
+	
 
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        $db = null;
-        echo '{"notice": {"text": "Customer Deleted"}';
-    } catch(PDOException $e){
-        echo '{"error": {"text": '.$e->getMessage().'}';
-    }
-});
+	        $stmt = $db->prepare($sql);
+	        $stmt->execute();
+	        $db = null;
+	        echo '{"notice": {"text": " estudiantes Deleted"}';
+	    } catch(PDOException $e){
+	        echo '{"error": {"text": '.$e->getMessage().'}';
+	    }
+	});
